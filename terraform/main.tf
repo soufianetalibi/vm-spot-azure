@@ -71,21 +71,25 @@ resource "azurerm_linux_virtual_machine" "spot_vm" {
   eviction_policy     = "Deallocate"
   max_bid_price       = var.max_bid_price
 
-  dynamic "identity" {
-    for_each = var.auto_shutdown ? ["true"] : []
-    content {
-      type = "SystemAssigned"
-    }
-  }
+  # --- START OF REMOVED BLOCKS ---
+  # These blocks are NOT supported directly within azurerm_linux_virtual_machine
+  #
+  # dynamic "identity" {
+  #   for_each = var.auto_shutdown ? ["true"] : []
+  #   content {
+  #     type = "SystemAssigned"
+  #   }
+  # }
+  #
+  # dynamic "auto_shutdown" {
+  #   for_each = var.auto_shutdown ? ["true"] : []
+  #   content {
+  #     enabled     = true
+  #     time        = var.shutdown_time
+  #     location    = azurerm_resource_group.rg.location
+  #   }
+  # }
+  # --- END OF REMOVED BLOCKS ---
 
-  dynamic "auto_shutdown" {
-    for_each = var.auto_shutdown ? ["true"] : []
-    content {
-      enabled     = true
-      time        = var.shutdown_time
-      location    = azurerm_resource_group.rg.location
-    }
-  }
-
-  admin_password = "StrongPassword123!" # ATTENTION: Utiliser des secrets GitHub pour un mot de passe sécurisé en production !
+  admin_password = "StrongPassword123!" # ATTENTION: Use GitHub secrets for production!
 }
